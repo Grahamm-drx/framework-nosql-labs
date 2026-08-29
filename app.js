@@ -1,14 +1,27 @@
-const express = require('express');
-const app = express();
+const express = require('express'); // Import Express framework
+const app = express(); // Initialize the Express app
 const PORT = 3000;
+
+app.use(express.json()); // Middleware: parse incoming JSON requests
+
+// Temporary in-memory data store
+// NOTE: This is a quick storage object just for this week.
+// We'll replace it with MongoDB (via Mongoose Models) in Week 4.
+const tempStore = { users: [] };
+app.use((req, res, next) => {
+  req.store = tempStore;                       // Attach the shared store to each request
+  next();                                      // Move on to the next middleware
+});
 
 const homeRoutes = require('./routes/homeRoutes');
 const aboutRoutes = require('./routes/aboutRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const userRoutes = require('./routes/userRoutes'); // Bring in the user routes
 
 app.use('/', homeRoutes);
 app.use('/', aboutRoutes);
 app.use('/', contactRoutes);
+app.use('/api', userRoutes); // Mount them under /api prefix
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

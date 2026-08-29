@@ -9,6 +9,8 @@ exports.createUser = (req, res) => {
 // Prevent duplicate IDs
 const exists = req.store.users.find(u => u.id === Number(id));
 if (exists) return res.status(409).json({ message: 'User id already exists.' });
+
+res.setHeader('Location', `/api/users/${id}`); // Attach Location header
  
 // Add new user to the in-memory store
 req.store.users.push({ id: Number(id), name, email });
@@ -19,6 +21,15 @@ return res.status(201).json({ message: 'User created' });
  
 // Get All Users
 exports.getUsers = (req, res) => {
+  const { name } = req.query; // Extract name from query string
+
+  if (name) { // Check if name filter is provided
+    const filteredUsers = req.store.users.filter(u => 
+      u.name.toLowerCase().includes(name.toLowerCase()) 
+    );
+    return res.status(200).json(filteredUsers); // Return the filtered results
+  }
+
   return res.status(200).json(req.store.users); // Simply return the full array
 };
  

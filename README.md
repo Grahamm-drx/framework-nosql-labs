@@ -1,15 +1,3 @@
-# Framework and NoSQL Technologies - Laboratory Repository
-
-**Student Name:** John Drex F. Cantor
-
-**Course & Section:** BSIS 3A 
-
-**Professor:** Guillermo V. Red, Jr.  
-
-**Email:** johndrexfirma.cantor24@bicol-u.edu.ph
-
- 
-
 ## Repository Purpose
 
 This repository contains all laboratory outputs from Week 1 to Week 9, progressively building toward a full-stack midterm project.
@@ -88,6 +76,19 @@ This week focuses on implementing RESTful CRUD operations using Express controll
         }
         ```
 
+*   **Get Users with Query Filter**
+    *   **Request:** `GET /api/users?name=ali`
+    *   **Response (200 OK):**
+        ```json
+        [
+          {
+            "id": 1,
+            "name": "Alice",
+            "email": "alice@example.com"
+          }
+        ]
+        ```
+
 *   **Get User (Not Found)**
     *   **Request:** `GET /api/users/999`
     *   **Response (404 Not Found):**
@@ -108,9 +109,13 @@ This week focuses on implementing RESTful CRUD operations using Express controll
 
 ### Status Codes Used
 
-*   **`200 OK`**: Successful read, update, or delete operation.
-*   **`201 Created`**: Successful user creation.
+*   **`200 OK`**: Successful read, query filter, update, or delete operation.
+*   **`201 Created`**: Successful user creation (with Location header).
 *   **`404 Not Found`**: User ID not found, or the requested route does not exist.
+
+### Additional Features Implemented (Weekly Challenge)
+*   **Query Filtering:** Added case-insensitive name filtering to `GET /api/users` using query parameters (`?name=`).
+*   **Location Header:** Configured `POST /api/users` to return a `Location` header pointing to the newly created resource (`/api/users/{id}`).
 
  
 

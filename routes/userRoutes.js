@@ -7,8 +7,7 @@ router.post('/users', c.createUser);        // POST /api/users → create
 router.get('/users', c.getUsers);           // GET /api/users → read all
 router.get('/users/:id', c.getUserById);    // GET /api/users/1 → read one
 
-// Day 2 Routes (Commented out for now):
-// router.put('/users/:id', c.updateUser);         // PUT /api/users/1 → update
-// router.delete('/users/:id', c.deleteUser);       // DELETE /api/users/1 → delete
+router.put('/users/:id', c.updateUser);         // PUT /api/users/1 → update
+router.delete('/users/:id', c.deleteUser);       // DELETE /api/users/1 → delete
 
 module.exports = router; // Export router so app.js can use it

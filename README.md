@@ -1,3 +1,13 @@
+# Framework and NoSQL Technologies - Laboratory Repository
+
+**Student Name:** John Drex F. Cantor
+
+**Course & Section:** BSIS 3A 
+
+**Professor:** Guillermo V. Red, Jr.
+
+**Email:** johndrexfirma.cantor24@bicol-u.edu.ph
+
 ## Repository Purpose
 
 This repository contains all laboratory outputs from Week 1 to Week 9, progressively building toward a full-stack midterm project.
@@ -117,7 +127,117 @@ This week focuses on implementing RESTful CRUD operations using Express controll
 *   **Query Filtering:** Added case-insensitive name filtering to `GET /api/users` using query parameters (`?name=`).
 *   **Location Header:** Configured `POST /api/users` to return a `Location` header pointing to the newly created resource (`/api/users/{id}`).
 
- 
+## Week 4 – MongoDB Atlas & Mongoose Integration
+
+This week transitions the application from temporary in-memory array storage to a cloud database using MongoDB Atlas and Mongoose ODM.
+
+### Key Features Implemented
+* **Database Connection:** Connected Express application to MongoDB Atlas via Mongoose (`mongoose.connect`).
+* **User Schema & Model:** Defined strict document rules in `models/userModel.js` requiring `name` and unique `email`, with non-negative constraints on `age`.
+* **Full CRUD Integration:** Migrated all controller routes in `controllers/userController.js` to utilize standard Mongoose methods (`create`, `find`, `findById`, `findByIdAndUpdate`, `findByIdAndDelete`).
+
+### API Endpoints & Test Results
+
+* **Create User**
+  * **Request:** `POST /api/users/`
+  * **Body:** 
+    ```json
+    {
+      "name": "Alice",
+      "email": "alice@example.com",
+      "age": 20
+    }
+    ```
+  * **Response (201 Created):** 
+    ```json
+    {
+      "name": "Alice",
+      "email": "alice@example.com",
+      "age": 20,
+      "_id": "6a966e66d6598d20daf7bc05",
+      "__v": 0
+    }
+    ```
+
+* **Get All Users**
+  * **Request:** `GET /api/users/`
+  * **Response (200 OK):**
+    ```json
+    [
+      {
+        "_id": "6a966e66d6598d20daf7bc05",
+        "name": "Alice",
+        "email": "alice@example.com",
+        "age": 20,
+        "__v": 0
+      }
+    ]
+    ```
+
+* **Get User by ID**
+  * **Request:** `GET /api/users/6a966e66d6598d20daf7bc05`
+  * **Response (200 OK):**
+    ```json
+    {
+      "_id": "6a966e66d6598d20daf7bc05",
+      "name": "Alice",
+      "email": "alice@example.com",
+      "age": 20,
+      "__v": 0
+    }
+    ```
+
+* **Update User**
+  * **Request:** `PUT /api/users/6a966e66d6598d20daf7bc05`
+  * **Body:** 
+    ```json
+    {
+      "name": "Drxiee",
+      "age": 19,
+      "email": "johndrex7@gmail.com"
+    }
+    ```
+  * **Response (200 OK):**
+    ```json
+    {
+      "message": "User updated",
+      "user": {
+        "_id": "6a966e66d6598d20daf7bc05",
+        "name": "Drxiee",
+        "email": "johndrex7@gmail.com",
+        "age": 19,
+        "__v": 0
+      }
+    }
+    ```
+
+* **Delete User**
+  * **Request:** `DELETE /api/users/6a966e66d6598d20daf7bc05`
+  * **Response (200 OK):**
+    ```json
+    {
+      "message": "User deleted",
+      "user": {
+        "_id": "6a966e66d6598d20daf7bc05",
+        "name": "Drxiee",
+        "email": "johndrex7@gmail.com",
+        "age": 19,
+        "__v": 0
+      }
+    }
+    ```
+
+* **Verify Empty List Post-Deletion**
+  * **Request:** `GET /api/users/`
+  * **Response (200 OK):**
+    ```json
+    []
+    ```
+
+### Status Codes Used
+
+* **`200 OK`**: Successful fetch, update, or deletion operation.
+* **`201 Created`**: Successful document creation in MongoDB Atlas.
 
 ## License
 

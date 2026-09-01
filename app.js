@@ -4,6 +4,13 @@ const PORT = 3000;
 
 app.use(express.json()); // Middleware: parse incoming JSON requests
 
+const mongoose = require('mongoose');
+
+mongoose.connect("mongodb+srv://johndrexfirmacantor24_db_user:rjhuQMhP3cthxDoo@nosql.mjj83si.mongodb.net")
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => console.error("❌ MongoDB connection error:", err));
+
+
 // Temporary in-memory data store
 // NOTE: This is a quick storage object just for this week.
 // We'll replace it with MongoDB (via Mongoose Models) in Week 4.

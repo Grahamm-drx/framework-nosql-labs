@@ -14,6 +14,7 @@ router.get("/users/:id", auth, userController.getUserById); // Get user by id if
 router.post("/users", auth, userController.createUser);
 router.put("/users/:id", auth, userController.updateUser);
 router.delete("/users/:id", auth, userController.deleteUser);
+router.get("/profile", auth, userController.getProfile); // Protected profile endpoint
 
 // Export the router to be mounted in app.js at /api
 module.exports = router;

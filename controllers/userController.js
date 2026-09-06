@@ -70,3 +70,15 @@ exports.deleteUser = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+// Get the profile of the currently authenticated user
+exports.getProfile = async (req, res) => {
+  try {
+    // req.user.id was set by auth middleware after jwt.verify
+    const user = await User.findById(req.user.id).select("-password"); // exclude password field
+    if (!user) return res.status(404).json({ message: "User not found" });
+    return res.status(200).json(user); // Return the sanitized user document
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
+  }
+};

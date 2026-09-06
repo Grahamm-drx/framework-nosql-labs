@@ -24,7 +24,9 @@ const homeRoutes = require('./routes/homeRoutes');
 const aboutRoutes = require('./routes/aboutRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const userRoutes = require('./routes/userRoutes'); // Bring in the user routes
+const authRoutes = require("./routes/authRoutes"); // Bring in the /api/auth routes
 
+app.use("/api/auth", authRoutes); // Mount at /api/auth (signup, login)
 app.use('/', homeRoutes);
 app.use('/', aboutRoutes);
 app.use('/', contactRoutes);

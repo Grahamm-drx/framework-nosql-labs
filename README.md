@@ -239,6 +239,83 @@ This week transitions the application from temporary in-memory array storage to 
 * **`200 OK`**: Successful fetch, update, or deletion operation.
 * **`201 Created`**: Successful document creation in MongoDB Atlas.
 
+## Week 5 – Authentication & JWT Security
+
+This week introduces user authentication, password hashing via bcrypt, and stateless session management using JSON Web Tokens (JWT). Protected routes now require valid credentials to ensure secure access.
+
+### Key Features Implemented
+* **Password Hashing:** Integrated `bcrypt` to securely salt and hash user passwords before storing them in MongoDB.
+* **Authentication Endpoints:** Created signup and login controllers to register users and issue signed JWT tokens.
+* **Route Protection Middleware:** Developed a custom authorization middleware to check for valid tokens in the `Authorization: Bearer <token>` header.
+
+### API Endpoints & Test Results
+
+* **Sign Up User**
+  * **Request:** `POST /api/auth/signup`
+  * **Body:** 
+    ```json
+    {
+      "name": "Alice",
+      "email": "alice@example.com",
+      "password": "mypassword"
+    }
+    ```
+  * **Response (201 Created):** 
+    ```json
+    {
+      "message": "User created successfully",
+      "userId": "6aaa03f189c5f06f15725b5c"
+    }
+    ```
+
+* **Log In User**
+  * **Request:** `POST /api/auth/login`
+  * **Body:** 
+    ```json
+    {
+      "email": "alice@example.com",
+      "password": "mypassword"
+    }
+    ```
+  * **Response (200 OK):**
+    ```json
+    {
+      "message": "Login successful",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+    ```
+
+* **Access Protected Route (Without Token - Denied)**
+  * **Request:** `GET /api/users`
+  * **Response (401 Unauthorized):**
+    ```json
+    {
+      "message": "Access Denied"
+    }
+    ```
+
+* **Access Protected Route (With Bearer Token - Success)**
+  * **Request:** `GET /api/users`
+  * **Header:** `Authorization: Bearer <token>`
+  * **Response (200 OK):**
+    ```json
+    [
+      {
+        "_id": "6aaa03f189c5f06f15725b5c",
+        "name": "Alice",
+        "email": "alice@example.com",
+        "password": "$2b$10$9ELx0WxQ1zc/LfJG5HrMoeysFMzbxVmykVw3ZEC66WVL/W/xwkdhe",
+        "__v": 0
+      }
+    ]
+    ```
+
+### Status Codes Used
+
+* **`200 OK`**: Successful login request or successful retrieval of protected resources using a valid JWT.
+* **`201 Created`**: Successful user account creation via the signup endpoint.
+* **`401 Unauthorized`**: Access denied when trying to access a protected route without providing a token.
+
 ## License
 
 Academic use only.

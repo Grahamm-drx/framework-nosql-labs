@@ -372,6 +372,66 @@ This week focuses on building advanced NoSQL data pipelines, performing cross-co
 * **Aggregation Stages:** `$match`, `$unwind`, `$group`, `$project`, `$sort`.
 * **Operators & Accumulators:** `$gt`, `$sum`, `$subtract`.
 
+### Day 2 – Advanced Aggregation & Indexing
+
+### Key Features Implemented
+* **Cross-Collection Joins (`$lookup`):** Linked the `orders` collection with the `users` collection to enrich orders with customer information.
+* **Analytical Grouping:** Used aggregation operators (`$group`, `$sum`, `$sort`, `$limit`, `$year`, `$month`) to determine top spenders and track monthly signup trends.
+* **Database Indexing:** Created performance-tuning indexes on high-traffic fields (`email`, `userId`, `orderDate`) and validated execution efficiency using `.explain("executionStats")`.
+
+### Aggregation Pipelines & Test Results
+
+* **Join Orders with User Info**
+  * **Request (Pipeline):** 
+    ```json
+    [
+      { "$lookup": { "from": "users", "localField": "userId", "foreignField": "_id", "as": "customer" } },
+      { "$unwind": "$customer" },
+      { "$project": { "product": 1, "price": 1, "orderDate": 1, "customer.name": 1, "customer.email": 1 } },
+      { "$sort": { "orderDate": 1 } }
+    ]
+    ```
+  * **Response Summary:** Successfully retrieved orders sorted chronologically by `orderDate` with embedded customer names and emails.
+
+* **Top 5 Customers by Total Spend**
+  * **Request (Pipeline):** 
+    ```json
+    [
+      { "$group": { "_id": "$userId", "totalSpent": { "$sum": "$price" } } },
+      { "$sort": { "totalSpent": -1 } },
+      { "$limit": 5 },
+      { "$lookup": { "from": "users", "localField": "_id", "foreignField": "_id", "as": "customer" } },
+      { "$unwind": "$customer" },
+      { "$project": { "_id": 0, "name": "$customer.name", "email": "$customer.email", "totalSpent": 1 } }
+    ]
+    ```
+  * **Response Summary:** Successfully isolated the top 5 highest-spending users ranked in descending order based on their cumulative `totalSpent` amount.
+
+* **Monthly Signups Trend**
+  * **Request (Pipeline):** 
+    ```json
+    [
+      { "$group": { "_id": { "year": { "$year": "$createdAt" }, "month": { "$month": "$createdAt" } }, "signups": { "$sum": 1 } } },
+      { "$sort": { "_id.year": 1, "_id.month": 1 } }
+    ]
+    ```
+  * **Response Summary:** Successfully aggregated user registration data grouped and sorted chronologically by year and month.
+
+* **Database Indexing & Performance Evaluation**
+  * **Commands Executed:** 
+    ```javascript
+    db.users.createIndex({ email: 1 });
+    db.orders.createIndex({ userId: 1 });
+    db.orders.createIndex({ orderDate: 1 });
+    db.orders.find({ userId: db.users.findOne()._id }).explain("executionStats");
+    ```
+  * **Response Summary:** Indexes (`email_1`, `userId_1`, `orderDate_1`) created successfully, and query performance execution stats were verified.
+
+### Operations & Operators Used
+* **Aggregation Stages:** `$lookup`, `$unwind`, `$project`, `$sort`, `$group`, `$limit`.
+* **Accumulators & Operators:** `$sum`, `$year`, `$month`.
+* **Performance Tools:** `.createIndex()`, `.explain("executionStats")`.
+
 ## License
 
 Academic use only.

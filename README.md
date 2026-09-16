@@ -316,6 +316,62 @@ This week introduces user authentication, password hashing via bcrypt, and state
 * **`201 Created`**: Successful user account creation via the signup endpoint.
 * **`401 Unauthorized`**: Access denied when trying to access a protected route without providing a token.
 
+## Week 6 – Advanced Aggregation & Indexing
+
+This week focuses on building advanced NoSQL data pipelines, performing cross-collection joins, analyzing spending trends, and optimizing query performance using MongoDB indexes.
+
+### Day 1 – Basic Aggregation Pipelines
+
+### Key Features Implemented
+* **Document Filtering (`$match`):** Filtered records based on conditional criteria like age thresholds.
+* **Array Flattening & Frequency Counting (`$unwind` + `$group`):** Unpacked array fields (hobbies) to compute and rank category frequencies.
+* **Field Projection & Transformation (`$project`):** Reshaped documents and computed new fields using arithmetic operators.
+* **Result Ordering (`$sort`):** Sorted collection outputs in descending order.
+
+### Aggregation Pipelines & Test Results
+
+* **Filter Users Older Than 25**
+  * **Request (Pipeline):** 
+    ```json
+    [
+      { "$match": { "age": { "$gt": 25 } } }
+    ]
+    ```
+  * **Response Summary:** Successfully filtered the user collection to return only documents where the `age` field is strictly greater than 25.
+
+* **Count Users by Hobby**
+  * **Request (Pipeline):** 
+    ```json
+    [
+      { "$unwind": "$hobbies" },
+      { "$group": { "_id": "$hobbies", "count": { "$sum": 1 } } },
+      { "$sort": { "count": -1 } }
+    ]
+    ```
+  * **Response Summary:** Successfully flattened the `hobbies` array, grouped individual hobbies to count user frequencies, and sorted the results from highest to lowest count.
+
+* **Show Name and Derived Birth Year**
+  * **Request (Pipeline):** 
+    ```json
+    [
+      { "$project": { "name": 1, "yearOfBirth": { "$subtract": [2024, "$age"] } } }
+    ]
+    ```
+  * **Response Summary:** Successfully projected the user's name and computed a custom `yearOfBirth` field by subtracting their `age` from 2024.
+
+* **Order Users by Age Descending**
+  * **Request (Pipeline):** 
+    ```json
+    [
+      { "$sort": { "age": -1 } }
+    ]
+    ```
+  * **Response Summary:** Successfully retrieved and sorted all user documents by age in descending order (oldest to youngest).
+
+### Operations & Operators Used
+* **Aggregation Stages:** `$match`, `$unwind`, `$group`, `$project`, `$sort`.
+* **Operators & Accumulators:** `$gt`, `$sum`, `$subtract`.
+
 ## License
 
 Academic use only.
